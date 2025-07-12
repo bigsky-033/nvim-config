@@ -1,43 +1,46 @@
-local null_ls = require("null-ls")
-local formatting = null_ls.builtins.formatting
-local diagnostics = null_ls.builtins.diagnostics
+local conform = require("conform")
 
-null_ls.setup({
-  sources = {
-    -- Python
-    formatting.black,
-    formatting.isort,
-    diagnostics.flake8,
-    
-    -- JavaScript/TypeScript
-    formatting.prettier.with({
-      filetypes = {
-        "javascript",
-        "javascriptreact",
-        "typescript",
-        "typescriptreact",
-        "json",
-        "css",
-        "html",
-        "markdown",
-      },
-    }),
-    
-    -- Java (Google Java Format)
-    formatting.google_java_format,
-    
-    -- C/C++
-    formatting.clang_format.with({
-      filetypes = { "c", "cpp", "cuda", "proto" },
-    }),
+conform.setup({
+  formatters_by_ft = {
+    python = { "isort", "black" },
+    javascript = { "prettier" },
+    typescript = { "prettier" },
+    javascriptreact = { "prettier" },
+    typescriptreact = { "prettier" },
+    json = { "prettier" },
+    html = { "prettier" },
+    css = { "prettier" },
+    markdown = { "prettier" },
+    java = { "google-java-format" },
+    c = { "clang_format" },
+    cpp = { "clang_format" },
+  },
+  format_on_save = {
+    lsp_fallback = true,
+    async = false,
+    timeout_ms = 500,
   },
 })
 
--- Auto format on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.py", "*.js", "*.jsx", "*.ts", "*.tsx", "*.java", "*.json", "*.css", "*.html", "*.c", "*.cpp", "*.h", "*.hpp" },
-  callback = function()
-    vim.lsp.buf.format({ async = false })
-  end,
-})
+-- Optional: Create a command to format manually
+vim.api.nvim_create_user_command("Format", function(args)
+  local range = nil
+  if args.count ~= -1 then
+    local end_line = vim.api.nvim_buf_get_lines(0, args.line2 - 1, args.line2, true)[1]
+    range = {
+      start = { args.line1, 0 },
+      ["end"] = { args.line2, end_line:len() },
+    }
+  end
+  conform.format({ async = true, lsp_fallback = true, range = range })
+end, { range = true })
+
+-- Set up format keybinding (optional, as you already have <leader>f for LSP format)
+vim.keymap.set({ "n", "v" }, "<leader>cf", function()
+  conform.format({
+    lsp_fallback = true,
+    async = false,
+    timeout_ms = 500,
+  })
+end, { desc = "Format file or range (in visual mode)" })
 

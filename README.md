@@ -115,7 +115,7 @@ Wait for all plugins to install (this happens automatically on first launch).
 - `<C-h/j/k/l>` - Navigate between splits
 
 ### Completion (Insert Mode)
-- `<C-Space>` - Trigger completion
+- `<C-j>` - Trigger completion
 - `<Tab>` - Next completion item
 - `<S-Tab>` - Previous completion item
 - `<CR>` - Confirm completion

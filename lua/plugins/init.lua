@@ -75,11 +75,13 @@ require("lazy").setup({
 
   -- Better formatting
   {
-    "jose-elias-alvarez/null-ls.nvim",
-    dependencies = { "nvim-lua/plenary.nvim" },
+    "stevearc/conform.nvim",
+    event = { "BufWritePre" },
+    cmd = { "ConformInfo" },
     config = function()
       require("plugins.formatting")
     end,
   },
+
 })
 
