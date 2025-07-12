@@ -6,6 +6,7 @@ A clean, minimal Neovim setup focused on essential features for Python, JavaScri
 
 - 🚀 **LSP Support**: Intelligent code completion, diagnostics, and navigation
 - 🔍 **Fuzzy Finding**: Quick file and text search with Telescope
+- 📁 **File Explorer**: Tree-style file navigation with NvimTree
 - 🎨 **Syntax Highlighting**: Enhanced with Treesitter
 - 📦 **Auto-installation**: Plugins and language servers install automatically
 - 🔧 **Auto-formatting**: Format on save with language-specific formatters
@@ -74,6 +75,26 @@ Wait for all plugins to install (this happens automatically on first launch).
 - `<leader>fr` - Recent files
 - `<leader>fs` - Search text in project (requires ripgrep)
 - `<leader>fc` - Find word under cursor in project
+
+### File Explorer (NvimTree)
+- `<leader>ee` - Toggle file explorer
+- `<leader>ef` - Find current file in explorer
+- `<leader>ec` - Collapse all folders
+- `<leader>er` - Refresh file explorer
+
+**Inside NvimTree:**
+- `a` - Create file/folder (end with `/` for folder)
+- `d` - Delete
+- `r` - Rename
+- `x` - Cut
+- `c` - Copy
+- `p` - Paste
+- `<CR>` or `o` - Open file/folder
+- `v` - Open in vertical split
+- `h` - Open in horizontal split
+- `R` - Refresh
+- `H` - Toggle hidden files
+- `g?` - Help
 
 ### Code Navigation (LSP)
 - `gd` - Go to definition

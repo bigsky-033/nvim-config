@@ -1,0 +1,81 @@
+# Plugin manager
+lazy-lock.json
+
+# Neovim runtime files
+.netrwhist
+*~
+*.swp
+*.swo
+*.swn
+.swap
+
+# Session files
+Session.vim
+*.vim.session
+
+# Tags
+tags
+.tags
+
+# Backup files
+*.bak
+backup/
+
+# Undo history
+undo/
+undodir/
+
+# Compiled Lua
+*.luac
+
+# OS generated files
+.DS_Store
+.DS_Store?
+._*
+.Spotlight-V100
+.Trashes
+ehthumbs.db
+Thumbs.db
+
+# LSP and Mason
+.cache/
+.local/
+
+# Project specific
+.nvim.lua
+.nvimrc
+.exrc
+
+# Temporary files
+tmp/
+temp/
+
+# Log files
+*.log
+lsp.log
+
+# Java specific (if using nvim-jdtls)
+workspace/
+.metadata/
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.Python
+.venv/
+venv/
+
+# Node.js
+node_modules/
+
+# C/C++ build artifacts
+compile_commands.json
+.clangd/
+.cache/clangd/
+
+# Personal notes or todo files
+TODO.md
+NOTES.md
+personal/
+

@@ -64,6 +64,15 @@ require("lazy").setup({
     config = true,
   },
 
+  -- File explorer
+  {
+    "nvim-tree/nvim-tree.lua",
+    dependencies = { "nvim-tree/nvim-web-devicons" },
+    config = function()
+      require("plugins.nvim-tree")
+    end,
+  },
+
   -- Better formatting
   {
     "jose-elias-alvarez/null-ls.nvim",

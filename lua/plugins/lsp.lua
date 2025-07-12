@@ -3,7 +3,7 @@ require("mason").setup()
 require("mason-lspconfig").setup({
   ensure_installed = {
     "lua_ls",
-    "tsserver",
+    "ts_ls",
     "pyright",
     "jdtls",
     "clangd",
@@ -62,90 +62,65 @@ local on_attach = function(client, bufnr)
 end
 
 -- Configure each LSP server
-require("mason-lspconfig").setup_handlers({
-  function(server_name)
-    lspconfig[server_name].setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-    })
-  end,
-  
-  -- Special configuration for TypeScript
-  ["tsserver"] = function()
-    lspconfig.tsserver.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact" },
-      settings = {
-        typescript = {
-          inlayHints = {
-            includeInlayParameterNameHints = "all",
-            includeInlayParameterNameHintsWhenArgumentMatchesName = false,
-            includeInlayFunctionParameterTypeHints = true,
-            includeInlayVariableTypeHints = true,
-            includeInlayPropertyDeclarationTypeHints = true,
-            includeInlayFunctionLikeReturnTypeHints = true,
-            includeInlayEnumMemberValueHints = true,
-          },
+local servers = {
+  lua_ls = {},
+  pyright = {
+    settings = {
+      python = {
+        analysis = {
+          autoSearchPaths = true,
+          typeCheckingMode = "basic",
+          useLibraryCodeForTypes = true,
         },
       },
-    })
-  end,
-  
-  -- Special configuration for Python
-  ["pyright"] = function()
-    lspconfig.pyright.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      settings = {
-        python = {
-          analysis = {
-            autoSearchPaths = true,
-            typeCheckingMode = "basic",
-            useLibraryCodeForTypes = true,
-          },
+    },
+  },
+  ts_ls = {
+    filetypes = { "typescript", "typescriptreact", "typescript.tsx", "javascript", "javascriptreact" },
+    settings = {
+      typescript = {
+        inlayHints = {
+          includeInlayParameterNameHints = "all",
+          includeInlayParameterNameHintsWhenArgumentMatchesName = false,
+          includeInlayFunctionParameterTypeHints = true,
+          includeInlayVariableTypeHints = true,
+          includeInlayPropertyDeclarationTypeHints = true,
+          includeInlayFunctionLikeReturnTypeHints = true,
+          includeInlayEnumMemberValueHints = true,
         },
       },
-    })
-  end,
-  
-  -- C/C++ configuration
-  ["clangd"] = function()
-    lspconfig.clangd.setup({
-      capabilities = capabilities,
-      on_attach = on_attach,
-      cmd = {
-        "clangd",
-        "--background-index",
-        "--clang-tidy",
-        "--header-insertion=iwyu",
-        "--completion-style=detailed",
-        "--function-arg-placeholders",
-        "--fallback-style=llvm",
-      },
-      init_options = {
-        usePlaceholders = true,
-        completeUnimported = true,
-        clangdFileStatus = true,
-      },
-      filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
-      root_dir = lspconfig.util.root_pattern(
-        ".clangd",
-        ".clang-tidy",
-        ".clang-format",
-        "compile_commands.json",
-        "compile_flags.txt",
-        "configure.ac",
-        ".git"
-      ),
-    })
-  end,
-  
-  -- Java configuration requires special handling
-  ["jdtls"] = function()
-    -- Skip jdtls here, we'll use a dedicated plugin for better Java support
-  end,
-})
+    },
+  },
+  clangd = {
+    cmd = {
+      "clangd",
+      "--background-index",
+      "--clang-tidy",
+      "--header-insertion=iwyu",
+      "--completion-style=detailed",
+      "--function-arg-placeholders",
+      "--fallback-style=llvm",
+    },
+    init_options = {
+      usePlaceholders = true,
+      completeUnimported = true,
+      clangdFileStatus = true,
+    },
+    filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+  },
+  eslint = {},
+  html = {},
+  cssls = {},
+  jsonls = {},
+  cmake = {},
+}
+
+-- Setup each server
+for server, config in pairs(servers) do
+  config.capabilities = capabilities
+  config.on_attach = on_attach
+  lspconfig[server].setup(config)
+end
 
 -- Setup diagnostic signs
 local signs = { Error = " ", Warn = " ", Hint = "󰠠 ", Info = " " }
