@@ -25,12 +25,17 @@ null_ls.setup({
     
     -- Java (Google Java Format)
     formatting.google_java_format,
+    
+    -- C/C++
+    formatting.clang_format.with({
+      filetypes = { "c", "cpp", "cuda", "proto" },
+    }),
   },
 })
 
 -- Auto format on save
 vim.api.nvim_create_autocmd("BufWritePre", {
-  pattern = { "*.py", "*.js", "*.jsx", "*.ts", "*.tsx", "*.java", "*.json", "*.css", "*.html" },
+  pattern = { "*.py", "*.js", "*.jsx", "*.ts", "*.tsx", "*.java", "*.json", "*.css", "*.html", "*.c", "*.cpp", "*.h", "*.hpp" },
   callback = function()
     vim.lsp.buf.format({ async = false })
   end,

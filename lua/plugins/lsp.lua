@@ -6,6 +6,8 @@ require("mason-lspconfig").setup({
     "tsserver",
     "pyright",
     "jdtls",
+    "clangd",
+    "cmake",
     "eslint",
     "html",
     "cssls",
@@ -104,6 +106,38 @@ require("mason-lspconfig").setup_handlers({
           },
         },
       },
+    })
+  end,
+  
+  -- C/C++ configuration
+  ["clangd"] = function()
+    lspconfig.clangd.setup({
+      capabilities = capabilities,
+      on_attach = on_attach,
+      cmd = {
+        "clangd",
+        "--background-index",
+        "--clang-tidy",
+        "--header-insertion=iwyu",
+        "--completion-style=detailed",
+        "--function-arg-placeholders",
+        "--fallback-style=llvm",
+      },
+      init_options = {
+        usePlaceholders = true,
+        completeUnimported = true,
+        clangdFileStatus = true,
+      },
+      filetypes = { "c", "cpp", "objc", "objcpp", "cuda", "proto" },
+      root_dir = lspconfig.util.root_pattern(
+        ".clangd",
+        ".clang-tidy",
+        ".clang-format",
+        "compile_commands.json",
+        "compile_flags.txt",
+        "configure.ac",
+        ".git"
+      ),
     })
   end,
   

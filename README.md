@@ -1,6 +1,6 @@
 # Minimal Neovim Configuration
 
-A clean, minimal Neovim setup focused on essential features for Python, JavaScript, TypeScript, and Java development.
+A clean, minimal Neovim setup focused on essential features for Python, JavaScript, TypeScript, Java, C, and C++ development.
 
 ## Features
 
@@ -18,6 +18,7 @@ A clean, minimal Neovim setup focused on essential features for Python, JavaScri
 - **Node.js** and npm (for JavaScript/TypeScript)
 - **Python** 3.x (for Python development)
 - **JDK** 11 or higher (for Java development)
+- **C/C++ compiler** (gcc/g++ or clang/clang++)
 - **ripgrep** (for Telescope live grep)
 - A [Nerd Font](https://www.nerdfonts.com/) (optional, for icons)
 
@@ -35,6 +36,14 @@ git clone https://github.com/YOUR_USERNAME/nvim-config.git ~/.config/nvim
 # Install additional tools
 pip install black isort flake8  # Python formatters
 npm install -g prettier          # JS/TS formatter
+
+# C/C++ formatter (choose based on your OS)
+# Ubuntu/Debian:
+sudo apt install clang-format
+# macOS:
+brew install clang-format
+# Arch:
+sudo pacman -S clang
 
 # Open Neovim (plugins will auto-install)
 nvim
@@ -127,6 +136,12 @@ Wait for all plugins to install (this happens automatically on first launch).
 - **Formatting**: Google Java Format
 - **Supports**: Maven, Gradle projects
 
+### C/C++
+- **LSP**: clangd (fast, feature-rich)
+- **Formatting**: clang-format
+- **Features**: IntelliSense, diagnostics, code actions
+- **Supports**: CMake, Make, compile_commands.json
+
 ### Additional
 - Lua, HTML, CSS, JSON, Markdown
 
@@ -187,12 +202,22 @@ Add the plugin specification to `lua/plugins/init.lua`:
   ```bash
   pip install black isort flake8
   npm install -g prettier
+  # For C/C++:
+  which clang-format  # Should show the path
   ```
 - Check `:LspInfo` for active formatters
 
-### Telescope Not Finding Files
-- Ensure you're in a git repository or project root
-- Install ripgrep for live grep functionality
+### C/C++ Specific Issues
+- **Clangd not starting**: Ensure you have a C++ compiler installed
+- **No code completion**: Create a `compile_commands.json` file:
+  ```bash
+  # For CMake projects:
+  cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .
+  
+  # For Make projects, use bear:
+  bear -- make
+  ```
+- **Custom formatting**: Create a `.clang-format` file in your project root
 
 ## Customization Tips
 
@@ -221,10 +246,6 @@ This configuration follows these principles:
 - **Fast**: Quick startup and responsive editing
 - **Portable**: Easy to move between machines
 - **Maintainable**: Clear structure, well-commented
-
-## Contributing
-
-Feel free to fork and customize! This is meant to be a starting point for your own configuration.
 
 ## Resources
 
