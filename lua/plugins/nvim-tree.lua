@@ -9,6 +9,20 @@ nvimtree.setup({
     width = 35,
     relativenumber = true,
   },
+  on_attach = function(bufnr)
+    local api = require("nvim-tree.api")
+    
+    local function opts(desc)
+      return { desc = "nvim-tree: " .. desc, buffer = bufnr, noremap = true, silent = true, nowait = true }
+    end
+    
+    -- Default mappings
+    api.config.mappings.default_on_attach(bufnr)
+    
+    -- Custom mappings
+    vim.keymap.set('n', 'v', api.node.open.vertical, opts('Open: Vertical Split'))
+    vim.keymap.set('n', 'h', api.node.open.horizontal, opts('Open: Horizontal Split'))
+  end,
   renderer = {
     indent_markers = {
       enable = true,
