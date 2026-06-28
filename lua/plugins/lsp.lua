@@ -58,7 +58,10 @@ return {
         "bashls",
         "marksman",
       },
-      automatic_enable = true,
+      -- ruff and stylua are installed as formatters (via mason-tool-installer),
+      -- not language servers. Exclude them so automatic_enable does not turn
+      -- them into extra LSP clients.
+      automatic_enable = { exclude = { "ruff", "stylua" } },
     })
   end,
 }
