@@ -60,10 +60,11 @@ Launch Neovim once and let it set itself up:
 nvim
 ```
 
-On the first launch, lazy.nvim installs the plugins and Mason installs the
-language servers, formatters, and Treesitter parsers. Wait for that to finish,
-then quit and start Neovim again so everything loads cleanly. If anything looks
-off, `:checkhealth` is the place to start.
+On the first launch, lazy.nvim installs the plugins, Mason installs the
+language servers and formatters, and nvim-treesitter builds the Treesitter
+parsers with the C compiler. Wait for that to finish, then quit and start
+Neovim again so everything loads cleanly. If anything looks off, `:checkhealth`
+is the place to start.
 
 ## Usage and maintenance
 

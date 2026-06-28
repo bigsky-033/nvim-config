@@ -2,6 +2,16 @@ return {
   "stevearc/conform.nvim",
   event = { "BufWritePre" },
   cmd = { "ConformInfo" },
+  keys = {
+    {
+      "<leader>cf",
+      function()
+        require("conform").format({ async = false, lsp_format = "fallback" })
+      end,
+      mode = { "n", "v" },
+      desc = "Format buffer/selection",
+    },
+  },
   dependencies = {
     {
       "WhoIsSethDaniel/mason-tool-installer.nvim",
@@ -31,10 +41,4 @@ return {
     },
     format_on_save = { timeout_ms = 1000, lsp_format = "fallback" },
   },
-  config = function(_, opts)
-    require("conform").setup(opts)
-    vim.keymap.set({ "n", "v" }, "<leader>cf", function()
-      require("conform").format({ async = false, lsp_format = "fallback" })
-    end, { desc = "Format buffer/selection" })
-  end,
 }
