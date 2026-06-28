@@ -1,277 +1,114 @@
-# Minimal Neovim Configuration
+# Neovim configuration
 
-A clean, minimal Neovim setup focused on essential features for Python, JavaScript, TypeScript, Java, C, and C++ development.
+A small, stability-first Neovim configuration for Neovim 0.12. It is meant for
+general editing and Markdown, with worked-out language support for Python and
+JavaScript/TypeScript (plus Lua and the common config formats: JSON, YAML, TOML,
+and Bash). The idea is a setup that stays out of the way: LSP and Treesitter
+highlighting come from Neovim core, and a short list of well-known plugins is
+managed by lazy.nvim. It runs the same on Linux and macOS. Anything
+machine-specific (language servers, formatters, parsers) is installed on first
+launch rather than committed, so a fresh checkout is enough to get going.
 
-## Features
+## Requirements
 
-- 🚀 **LSP Support**: Intelligent code completion, diagnostics, and navigation
-- 🔍 **Fuzzy Finding**: Quick file and text search with Telescope
-- 📁 **File Explorer**: Tree-style file navigation with NvimTree
-- 🎨 **Syntax Highlighting**: Enhanced with Treesitter
-- 📦 **Auto-installation**: Plugins and language servers install automatically
-- 🔧 **Auto-formatting**: Format on save with language-specific formatters
-- 💾 **Portable**: Easy to sync across machines via Git
+Neovim 0.12 or newer, plus a few command-line tools:
 
-## Prerequisites
+- git, curl, and tar to bootstrap plugins and fetch Mason tools.
+- A C compiler (gcc or clang) and make, to build Treesitter parsers.
+- ripgrep and fd for Telescope's file and text search.
+- Node.js for the TypeScript server and the prettier formatter.
+- A Nerd Font, for the icons in the file explorer and statusline.
+- A clipboard tool so the system clipboard works: wl-clipboard or xclip on
+  Linux; macOS has this built in.
 
-- **Neovim** >= 0.8.0
-- **Git**
-- **Node.js** and npm (for JavaScript/TypeScript)
-- **Python** 3.x (for Python development)
-- **JDK** 11 or higher (for Java development)
-- **C/C++ compiler** (gcc/g++ or clang/clang++)
-- **ripgrep** (for Telescope live grep)
-- A [Nerd Font](https://www.nerdfonts.com/) (optional, for icons)
+Language servers and formatters are not prerequisites. Mason installs them per
+machine on first launch.
 
-## Quick Install
+## Install
 
-### On a New Machine
+On a new machine, install the prerequisites, back up any existing config, then
+clone this repo into place.
+
+Fedora:
 
 ```bash
-# Backup existing config (if any)
+sudo dnf install git curl tar gcc make ripgrep fd-find nodejs
+```
+
+macOS (Homebrew):
+
+```bash
+brew install git curl ripgrep fd node
+brew install --cask font-jetbrains-mono-nerd-font
+```
+
+On Wayland you also want a clipboard tool (`sudo dnf install wl-clipboard`, or
+`xclip` on X11). On Fedora, install a Nerd Font by hand from nerdfonts.com.
+
+Then back up and clone:
+
+```bash
+# Back up an existing config, if you have one.
 mv ~/.config/nvim ~/.config/nvim.bak
 
-# Clone this configuration
-git clone https://github.com/YOUR_USERNAME/nvim-config.git ~/.config/nvim
+git clone https://github.com/bigsky-033/nvim-config.git ~/.config/nvim
+```
 
-# Install additional tools
-pip install black isort flake8  # Python formatters
-npm install -g prettier          # JS/TS formatter
+Launch Neovim once and let it set itself up:
 
-# C/C++ formatter (choose based on your OS)
-# Ubuntu/Debian:
-sudo apt install clang-format
-# macOS:
-brew install clang-format
-# Arch:
-sudo pacman -S clang
-
-# Open Neovim (plugins will auto-install)
+```bash
 nvim
 ```
 
-Wait for all plugins to install (this happens automatically on first launch).
+On the first launch, lazy.nvim installs the plugins and Mason installs the
+language servers, formatters, and Treesitter parsers. Wait for that to finish,
+then quit and start Neovim again so everything loads cleanly. If anything looks
+off, `:checkhealth` is the place to start.
 
-### First Time Setup
+## Usage and maintenance
 
-1. Clone this repository to your Neovim config location
-2. Open Neovim - it will automatically:
-   - Install the plugin manager (lazy.nvim)
-   - Download and install all plugins
-   - Install LSP servers via Mason
-3. Restart Neovim after the initial setup completes
+A handful of commands cover day-to-day upkeep:
 
-## Key Bindings
+- `:Lazy` shows plugin status and opens the manager UI.
+- `:Lazy update` updates plugins and refreshes `lazy-lock.json`. Commit the
+  updated lockfile so your other machines resolve the same commits.
+- `:Mason` manages language servers, formatters, and other tools.
+- `:TSUpdate` installs or updates Treesitter parsers.
+- `:checkhealth` runs overall diagnostics; `:checkhealth vim.lsp` shows which
+  servers attached to the current buffer.
 
-### Leader Key
-- `Space` - Leader key (most commands start with this)
-
-### General
-- `jk` - Exit insert mode (alternative to ESC)
-- `<leader>nh` - Clear search highlights
-
-### File Navigation (Telescope)
-- `<leader>ff` - Find files in project
-- `<leader>fr` - Recent files
-- `<leader>fs` - Search text in project (requires ripgrep)
-- `<leader>fc` - Find word under cursor in project
-
-### File Explorer (NvimTree)
-- `<leader>ee` - Toggle file explorer
-- `<leader>ef` - Find current file in explorer
-- `<leader>ec` - Collapse all folders
-- `<leader>er` - Refresh file explorer
-
-**Inside NvimTree:**
-- `a` - Create file/folder (end with `/` for folder)
-- `d` - Delete
-- `r` - Rename
-- `x` - Cut
-- `c` - Copy
-- `p` - Paste
-- `<CR>` or `o` - Open file/folder
-- `v` - Open in vertical split
-- `h` - Open in horizontal split
-- `R` - Refresh
-- `H` - Toggle hidden files
-- `g?` - Help
-
-### Code Navigation (LSP)
-- `gd` - Go to definition
-- `K` - Show hover documentation
-- `<leader>vrr` - Find references
-- `<leader>vrn` - Rename symbol
-- `<leader>vca` - Code actions (fixes, refactors)
-- `<leader>vd` - Show diagnostics float
-- `[d` - Go to previous diagnostic
-- `]d` - Go to next diagnostic
-- `<leader>f` - Format current file
-
-### Window Management
-- `<leader>sv` - Split window vertically
-- `<leader>sh` - Split window horizontally
-- `<leader>se` - Make splits equal size
-- `<leader>sx` - Close current split
-- `<C-h/j/k/l>` - Navigate between splits
-
-### Completion (Insert Mode)
-- `<C-j>` - Trigger completion
-- `<Tab>` - Next completion item
-- `<S-Tab>` - Previous completion item
-- `<CR>` - Confirm completion
-- `<C-e>` - Cancel completion
-
-## Project Structure
+## Layout
 
 ```
-~/.config/nvim/
-├── init.lua                 # Entry point
-├── lua/
-│   ├── core/
-│   │   ├── options.lua     # Vim options
-│   │   └── keymaps.lua     # Key mappings
-│   └── plugins/
-│       ├── init.lua        # Plugin declarations
-│       ├── lsp.lua         # LSP configuration
-│       ├── telescope.lua   # Fuzzy finder setup
-│       ├── treesitter.lua  # Syntax highlighting
-│       ├── java.lua        # Java-specific config
-│       └── formatting.lua  # Auto-formatting setup
+init.lua              Entry point; loads lua/config/lazy.lua.
+lazy-lock.json        Pinned plugin commits (committed).
+lua/config/           Core editor settings.
+  lazy.lua            Leader keys, core requires, lazy.nvim bootstrap.
+  options.lua         Editor options.
+  keymaps.lua         Non-plugin keymaps.
+  autocmds.lua        Yank highlight; start Treesitter highlight per buffer.
+lua/plugins/          One file per concern, each returning a lazy spec.
+after/lsp/            Per-server LSP overrides (lua_ls.lua is the example).
+docs/cheatsheet.md    Keymap and vim cheatsheet.
+AGENTS.md             Decision record and maintenance guide.
 ```
 
-## Supported Languages
+## Keybindings
 
-### Python
-- **LSP**: Pyright (type checking, completion)
-- **Formatting**: Black, isort
-- **Linting**: Flake8
+The leader key is Space. The full keymap, along with a short vim refresher,
+lives in [docs/cheatsheet.md](docs/cheatsheet.md) instead of being duplicated
+here. which-key also pops up the available leader mappings as you type, so you
+can discover most of them without leaving the editor.
 
-### JavaScript/TypeScript
-- **LSP**: tsserver
-- **Linting**: ESLint
-- **Formatting**: Prettier
-- **Supports**: JSX, TSX
+## Customizing
 
-### Java
-- **LSP**: jdtls (Eclipse JDT Language Server)
-- **Formatting**: Google Java Format
-- **Supports**: Maven, Gradle projects
+- Colorscheme: edit `lua/plugins/colorscheme.lua`. It uses tokyonight; change
+  the style there, or swap in a different colorscheme plugin.
+- Adding a language: follow the recipe in `AGENTS.md`. In short, add the
+  Treesitter parser, the Mason LSP server, and a formatter, each in its own
+  plugin file under `lua/plugins/`.
+- Per-server LSP settings: add `after/lsp/<server>.lua` returning a settings
+  table, which is merged over the defaults. See `after/lsp/lua_ls.lua`.
 
-### C/C++
-- **LSP**: clangd (fast, feature-rich)
-- **Formatting**: clang-format
-- **Features**: IntelliSense, diagnostics, code actions
-- **Supports**: CMake, Make, compile_commands.json
-
-### Additional
-- Lua, HTML, CSS, JSON, Markdown
-
-## Managing Your Configuration
-
-### Update Plugins
-```vim
-:Lazy update
-```
-
-### Check Plugin Status
-```vim
-:Lazy
-```
-
-### Install LSP Servers
-```vim
-:Mason
-```
-
-### View Installed LSP Servers
-```vim
-:LspInfo
-```
-
-## Adding to Your Config
-
-### Install a New Plugin
-Add the plugin specification to `lua/plugins/init.lua`:
-```lua
-{
-  "plugin/name",
-  config = function()
-    -- plugin configuration
-  end,
-}
-```
-
-### Add Support for a New Language
-1. Add the Treesitter parser in `lua/plugins/treesitter.lua`
-2. Add the LSP server in `lua/plugins/lsp.lua`
-3. Add any formatters in `lua/plugins/formatting.lua`
-4. Restart Neovim
-
-## Troubleshooting
-
-### Plugins Not Loading
-- Run `:Lazy` to check plugin status
-- Try `:Lazy restore` to reinstall plugins
-
-### LSP Not Working
-- Check `:LspInfo` when in a code file
-- Ensure language servers are installed: `:Mason`
-- Check prerequisites (Node.js for JS/TS, Python for Python files)
-
-### Formatting Not Working
-- Ensure formatters are installed:
-  ```bash
-  pip install black isort flake8
-  npm install -g prettier
-  # For C/C++:
-  which clang-format  # Should show the path
-  ```
-- Check `:LspInfo` for active formatters
-
-### C/C++ Specific Issues
-- **Clangd not starting**: Ensure you have a C++ compiler installed
-- **No code completion**: Create a `compile_commands.json` file:
-  ```bash
-  # For CMake projects:
-  cmake -DCMAKE_EXPORT_COMPILE_COMMANDS=ON .
-  
-  # For Make projects, use bear:
-  bear -- make
-  ```
-- **Custom formatting**: Create a `.clang-format` file in your project root
-
-## Customization Tips
-
-### Change Color Scheme
-Edit `lua/plugins/init.lua` and replace the colorscheme plugin:
-```lua
-{
-  "folke/tokyonight.nvim",  -- Change this
-  priority = 1000,
-  config = function()
-    vim.cmd([[colorscheme tokyonight]])  -- And this
-  end,
-}
-```
-
-### Modify Options
-Edit `lua/core/options.lua` to change editor behavior (tabs, line numbers, etc.)
-
-### Add Custom Keymaps
-Add your keybindings to `lua/core/keymaps.lua`
-
-## Philosophy
-
-This configuration follows these principles:
-- **Minimal**: Only essential features, no bloat
-- **Fast**: Quick startup and responsive editing
-- **Portable**: Easy to move between machines
-- **Maintainable**: Clear structure, well-commented
-
-## Resources
-
-- [Neovim Documentation](https://neovim.io/doc/)
-- [LSP Configuration](https://github.com/neovim/nvim-lspconfig)
-- [Telescope](https://github.com/nvim-telescope/telescope.nvim)
-- [Treesitter](https://github.com/nvim-treesitter/nvim-treesitter)
-
+`AGENTS.md` has the fuller picture: what each plugin is, why it was chosen, and
+what was deliberately left out.
