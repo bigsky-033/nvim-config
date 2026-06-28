@@ -1,6 +1,3 @@
-# Plugin manager
-lazy-lock.json
-
 # Neovim runtime files
 .netrwhist
 *~

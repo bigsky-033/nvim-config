@@ -1,0 +1,1 @@
+-- editor options (Task 2)
