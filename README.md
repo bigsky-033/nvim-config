@@ -14,7 +14,7 @@ launch rather than committed, so a fresh checkout is enough to get going.
 Neovim 0.12 or newer, plus a few command-line tools:
 
 - git, curl, and tar to bootstrap plugins and fetch Mason tools.
-- A C compiler (gcc or clang) and make, to build Treesitter parsers.
+- A C compiler (gcc or clang), make, and the tree-sitter CLI, to build Treesitter parsers.
 - ripgrep and fd for Telescope's file and text search.
 - Node.js for the TypeScript server and the prettier formatter.
 - A Nerd Font, for the icons in the file explorer and statusline.
@@ -32,13 +32,13 @@ clone this repo into place.
 Fedora:
 
 ```bash
-sudo dnf install git curl tar gcc make ripgrep fd-find nodejs
+sudo dnf install git curl tar gcc make tree-sitter-cli ripgrep fd-find nodejs
 ```
 
 macOS (Homebrew):
 
 ```bash
-brew install git curl ripgrep fd node
+brew install git curl ripgrep fd node tree-sitter
 brew install --cask font-jetbrains-mono-nerd-font
 ```
 
